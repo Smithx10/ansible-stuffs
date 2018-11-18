@@ -6,12 +6,14 @@ source /usr/local/lib/common-app.sh
 # Run mesos_exporter
 runMesosExporterMaster() {
     _log "Starting the Prometheus Mesos Exporter Master..."
-    /usr/local/bin/mesos_exporter -addr :${MESOS_EXPORTER_PORT} -enableMasterState=true -master https://$(ipDetect eth0):5050 -timeout=60s -skipSSLVerify
+    #Todo for ansible, template the listen addr.
+    /usr/local/bin/mesos_exporter -addr :9095 -enableMasterState=true -master https://localhost:5050 -timeout=60s -skipSSLVerify
 }
 
 runMesosExporterSlave() {
     _log "Starting the Prometheus Mesos Exporter Slave..."
-    /usr/local/bin/mesos_exporter -addr :${MESOS_EXPORTER_PORT} -slave https://$(ipDetect eth0):5051 -timeout=60s -skipSSLVerify
+    #Todo for ansible, template the listen addr.
+    /usr/local/bin/mesos_exporter -addr :9095 -slave https://localhost:5051 -timeout=60s -skipSSLVerify
 }
 
 restartMesosExporterMaster() {
