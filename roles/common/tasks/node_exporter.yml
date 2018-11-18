@@ -1,0 +1,31 @@
+---
+- name: downlaod node_exporter
+  get_url:
+    url: https://github.com/prometheus/node_exporter/releases/download/v0.16.0/node_exporter-0.16.0.linux-amd64.tar.gz
+    dest: /tmp
+    checksum: sha256:e92a601a5ef4f77cce967266b488a978711dabc527a720bea26505cba426c029
+
+- name: untar node_exporter-0.16.0.tar.gz => /tmp
+  unarchive:
+    remote_src: yes
+    src: /tmp/node_exporter-0.16.0.linux-amd64.tar.gz
+    dest: /tmp
+
+- name: Move /tmp/node_exporter-0.16.0.linux-amd64/node_exporter => /usr/local/bin
+  command: mv /tmp/node_exporter-0.16.0.linux-amd64/node_exporter /usr/local/bin
+
+- name: clean /tmp/node_exporter*
+  shell: rm -rf /tmp/node_exporter*
+
+- name: ensure system unit file is present
+  copy: src=node_exporter/node_exporter.service dest=/etc/systemd/system owner=root group=root mode="u+rwx"
+
+- name: ensure node_exporter-manage file is present
+  copy: src=node_exporter/node_exporter-manage dest=/usr/local/bin owner=root group=root mode="u+rwx"
+
+- name: Make sure node_exporter is running
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    state: started
+    name: node_exporter

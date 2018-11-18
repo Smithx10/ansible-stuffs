@@ -1,0 +1,22 @@
+#!/bin/bash
+set -eo pipefail
+
+# Run Node_Exporter
+runNodeExporter() {
+    /usr/local/bin/node_exporter \
+      --collector.systemd \
+      --collector.textfile.directory /opt/local/node_exporter/text_collectors
+}
+
+restartNodeExporter() {
+  if pgrep node_exporter; then
+    pkill $(pgrep node_exporter)
+    runNodeExporter 
+  else
+    runNodeExporter
+  fi
+
+}
+$@
+
+

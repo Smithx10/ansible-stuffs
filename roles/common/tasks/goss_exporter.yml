@@ -1,0 +1,46 @@
+---
+- name: downlaod goss_exporter
+  get_url:
+    url: https://github.com/Smithx10/goss/releases/download/v0.1.11/goss-0.1.11.tar.gz
+    dest: /tmp
+    checksum: sha256:0b70747dd38032c20c934ff23e5c136bd77c27b87b037b946fbf5d71eea5aad9
+
+- name: untar goss-0.1.11.tar.gz => /usr/local/bin
+  unarchive:
+    remote_src: yes
+    src: /tmp/goss-0.1.11.tar.gz
+    dest: /usr/local/bin
+
+- name: clean /tmp
+  file:
+    state: absent
+    path: /tmp/goss-0.1.11.tar.gz
+
+- name: ensure system unit file is present
+  copy: src=goss_exporter/goss_exporter.service dest=/etc/systemd/system owner=root group=root mode="u+rwx"
+
+- name: ensure goss_exporter-manage file is present
+  copy: src=goss_exporter/goss_exporter-manage dest=/usr/local/bin owner=root group=root mode="u+rwx"
+
+- name: ensure /opt/goss/etc is present
+  file:
+    path: /opt/goss/etc
+    state: directory
+    mode: 0755
+    group: root
+    owner: root
+
+- name: ensure goss.yml file is present
+  copy: 
+    src: goss_exporter/goss.yml 
+    dest: /opt/goss/etc 
+    owner: root 
+    group: root 
+    mode: u+rwx
+
+- name: Make sure goss_exporter is running
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    state: started
+    name: goss_exporter

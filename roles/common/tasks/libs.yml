@@ -1,0 +1,16 @@
+---
+- name: ensure /usr/local/lib is present
+  file:
+    path: /usr/local/lib
+    state: directory
+    mode: 0755
+    group: root
+    owner: root
+- name: ensure common-app.sh is in file is present in /usr/local/lib
+  copy: 
+    src: libs/common-app.sh 
+    dest: /usr/local/lib 
+    owner: root 
+    group: root
+    mode: u+rwx
+

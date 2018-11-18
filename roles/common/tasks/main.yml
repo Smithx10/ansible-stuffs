@@ -1,0 +1,6 @@
+---
+#- include: cadvisor.yml
+- include: libs.yml
+- include: node_exporter.yml
+- include: goss_exporter.yml
+#- include: mesos_exporter.yml

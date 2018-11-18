@@ -1,0 +1,18 @@
+---
+- name: downlaod mesos_exporter
+  get_url:
+    url: https://github.com/mesos/mesos_exporter/releases/download/v1.1.1/mesos_exporter-1.1.1.linux-amd64.tar.gz
+    dest: /tmp
+    checksum: sha256:b902df5988063049d6149856381364224f32395f16001e381dbde898f5ef7b3b
+
+- name: untar mesos_exporter-1.1.1.linux-amd64.tar.gz => /tmp
+  unarchive:
+    remote_src: yes
+    src: /tmp/mesos_exporter-1.1.1.linux-amd64.tar.gz
+    dest: /tmp
+
+- name: move mesos_exporter to /usr/local/bin
+  command: mv /tmp/mesos_exporter-1.1.1.linux-amd64/mesos_exporter /usr/local/bin
+
+- name: clean /tmp/mesos_exporter*
+  shell: rm -rf /tmp/mesos_exporter*

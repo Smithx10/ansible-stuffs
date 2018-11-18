@@ -1,0 +1,27 @@
+#!/bin/bash
+set -eo pipefail
+
+source /usr/local/lib/common-app.sh
+
+# Run cadvisor
+runCadvisor() {
+    _log "Starting CAdvisor"
+    /usr/local/bin/cadvisor \
+      --port=9099 \
+      --prometheus_endpoint="/metrics"
+  }
+
+
+restartCadvisor() {
+  if pgrep cadvisor; then
+    _log "cadvisor pid found, killing and starting again"
+    pkill $(pgrep cadvisor)
+    runCadvisor
+  else
+    _log "cadvisor pid not found,  starting cadvisor"
+    runCadvisor
+  fi
+}
+$@
+
+

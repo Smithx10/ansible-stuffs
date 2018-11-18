@@ -1,0 +1,17 @@
+[Unit]
+Description=node_exporter
+After=network.target auditd.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/node_exporter-manage runNodeExporter
+ExecReloa=/usr/local/bin/node_exporter-manage restartNodeExporter
+KillMode=mixed
+LimitNOFILE=1048576
+LimitNPROC=1048576
+LimitCORE=infinity
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

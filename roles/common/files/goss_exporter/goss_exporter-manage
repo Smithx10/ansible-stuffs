@@ -1,0 +1,30 @@
+#!/bin/bash
+set -eo pipefail
+
+source /usr/local/lib/common-app.sh
+
+# Run Goss
+runGoss() {
+    _log "Starting Goss"
+    /usr/local/bin/goss \
+      --gossfile "/opt/goss/etc/goss.yml" \
+      serve \
+      --endpoint "/metrics" \
+      --format "prometheus" \
+      --listen-addr ":9098"
+}
+
+restartGoss() {
+  if pgrep goss; then
+    _log "goss pid found, killing and starting again"
+    pkill $(pgrep goss)
+    runGoss
+  else
+    _log "goss pid not found,  starting goss"
+    runGoss
+  fi
+
+}
+$@
+
+

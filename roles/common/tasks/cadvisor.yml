@@ -1,0 +1,7 @@
+---
+- name: install cadvisor
+  get_url:
+    url: https://github.com/google/cadvisor/releases/download/v0.31.0/cadvisor
+    dest: /usr/local/bin
+    checksum: sha256:195faa8d3953b4534bb0f050738ca3f7d6b1a646a1663e5660c9848967ff678f
+    mode: 755

@@ -1,0 +1,17 @@
+[Unit]
+Description=goss
+After=network.target auditd.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/goss_exporter-manage runGoss
+ExecReload=/usr/local/bin/goss_exporter-manage restartGoss
+KillMode=mixed
+LimitNOFILE=1048576
+LimitNPROC=1048576
+LimitCORE=infinity
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

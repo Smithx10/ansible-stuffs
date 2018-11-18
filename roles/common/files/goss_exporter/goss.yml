@@ -1,0 +1,8 @@
+# ---------------------------------------------
+# Packages
+# ---------------------------------------------
+package:
+  cntlm:
+    installed: true
+  docker:
+    installed: true

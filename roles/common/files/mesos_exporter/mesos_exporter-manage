@@ -1,0 +1,38 @@
+#!/bin/bash
+set -eo pipefail
+
+source /usr/local/lib/common-app.sh
+
+# Run mesos_exporter
+runMesosExporterMaster() {
+    _log "Starting the Prometheus Mesos Exporter Master..."
+    /usr/local/bin/mesos_exporter -addr :${MESOS_EXPORTER_PORT} -enableMasterState=true -master https://$(ipDetect eth0):5050 -timeout=60s -skipSSLVerify
+}
+
+runMesosExporterSlave() {
+    _log "Starting the Prometheus Mesos Exporter Slave..."
+    /usr/local/bin/mesos_exporter -addr :${MESOS_EXPORTER_PORT} -slave https://$(ipDetect eth0):5051 -timeout=60s -skipSSLVerify
+}
+
+restartMesosExporterMaster() {
+  if pgrep mesos_exporter; then
+    _log "mesos_exporter pid found, killing and starting again"
+    pkill $(pgrep mesos_exporter)
+    runMesosExporterMaster
+  else
+    _log "mesos_exporter pid not found,  starting mesos_exporter"
+    
+  fi
+}
+restartMesosExporterSlave() {
+  if pgrep mesos_exporter; then
+    _log "mesos_exporter pid found, killing and starting again"
+    pkill $(pgrep mesos_exporter)
+    runMesosExporterSlave
+  else
+    _log "mesos_exporter pid not found,  starting mesos_exporter"
+  fi
+}
+$@
+
+
